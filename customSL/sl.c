@@ -245,7 +245,7 @@ void add_man(int y, int x)
     int i;
 
     for (i = 0; i < 2; ++i) {
-        my_mvaddstr(y + i, x, man[(LOGOLENGTH + x) / 12 % 2][i]);
+        my_mvaddstr(y + i, x, man[((LOGOLENGTH + x) / 12) % 2][i]);
     }
 }
 
