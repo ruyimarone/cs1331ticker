@@ -1,5 +1,2 @@
 source 'https://rubygems.org'
-gem 'marky_markov'
 gem 'mail'
-gem 'pry'
-gem 'vcr'
