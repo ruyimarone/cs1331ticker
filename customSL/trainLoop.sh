@@ -2,6 +2,6 @@
 
 while true
 do
-  ./sl
+  ./sl -e
   sleep 1
 done
