@@ -27,7 +27,7 @@
 
 #define D51HIGHT	13 // THIS USED TO BE 10. Edit if changing height of train
 #define D51FUNNEL	5 // Horizontal positon of the funnel. Used to be 7
-#define D51LENGTH	197 //THIS USED TO BE 83. Edit if changing length of train
+#define D51LENGTH	208 //THIS USED TO BE 83. Edit if changing length of train
 #define D51PATTERNS	 6 // Number of animation patterns for the wheels I think
 
 #define D51STR1  "      ====                                                  "

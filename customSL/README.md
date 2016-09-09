@@ -12,3 +12,8 @@ $ make
 * To run the program in a loop, just make trainLoop.sh executable and run that.
 * This version of SL does not support exiting with CTRL+C, but there is a 1
 second delay between loops. Hit CTRL+C during that period to abort.
+* The command to run the program is:
+
+```bash
+$ ./sl [-a]
+```
