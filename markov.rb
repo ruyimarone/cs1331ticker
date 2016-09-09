@@ -1,5 +1,6 @@
 require 'marky_markov'
 require 'mail'
+require 'pry'
 
 Mail.defaults do
   retriever_method :pop3, :address => "pop.gmail.com",
@@ -9,11 +10,22 @@ Mail.defaults do
     :enable_ssl => true
 end
 
-# mail.all only gets the latest messages it hasn't already recieved :(
-emails = Mail.all
-puts "no new mail :(" if emails.empty?
+emails = Mail.find(:what => :first, :count => 10, :order => :asc)
+emails.select! {|mail| mail.from.any? {|s| s =~ /piazza\.com$/}}
 
-emails.each do |mail|
-  p mail.body
+puts "no new mail :("; exit if emails.empty?
+
+piazza_strs = emails.map do |mail|
+  # pulls out the post between the piazza boilerplate
+  match = mail.body.decoded.match(/^.*?posted.*?\n{2}(.*?)\n{2}Go to http/m)
+  match[1] unless match.nil?
+end
+p piazza_strs
+
+markov = MarkyMarkov::TemporaryDictionary.new
+piazza_strs.each do |str|
+  markov.parse_string str
 end
 
+10.times {puts markov.generate_1_sentences}
+pry
