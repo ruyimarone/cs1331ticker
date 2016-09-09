@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     }
     initscr();
     if (INTR == 0) {
-        signal(SIGINT, SIG_IGN);
+        signal(SIGINT, SIG_IGN); // ignore (IGN) the interrupt (INT) signal
     }
     signal(SIGTSTP, SIG_IGN);
     noecho();
