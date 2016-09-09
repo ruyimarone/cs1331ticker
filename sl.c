@@ -70,9 +70,9 @@ void option(char *str)
     while (*str != '\0') {
         switch (*str++) {
             case 'a': ACCIDENT = 1; break;
-            case 'F': FLY      = 1; break;
-            case 'l': LOGO     = 1; break;
-            case 'c': C51      = 1; break;
+            // case 'F': FLY      = 1; break; // No flying
+            // case 'l': LOGO     = 1; break; // No LOGO
+            // case 'c': C51      = 1; break; // No tiny train
             default:                break;
         }
     }
@@ -157,22 +157,25 @@ int add_sl(int x)
 
 int add_D51(int x)
 {
+    // Edit this to add in extra D51 levels. - love Jim
     static char *d51[D51PATTERNS][D51HIGHT + 1]
         = {{D51STR1, D51STR2, D51STR3, D51STR4, D51STR5, D51STR6, D51STR7,
-            D51WHL11, D51WHL12, D51WHL13, D51DEL},
+            D51STR8, D51STR9, D51STRA, D51WHL11, D51WHL12, D51WHL13, D51DEL},
            {D51STR1, D51STR2, D51STR3, D51STR4, D51STR5, D51STR6, D51STR7,
-            D51WHL21, D51WHL22, D51WHL23, D51DEL},
+            D51STR8, D51STR9, D51STRA, D51WHL21, D51WHL22, D51WHL23, D51DEL},
            {D51STR1, D51STR2, D51STR3, D51STR4, D51STR5, D51STR6, D51STR7,
-            D51WHL31, D51WHL32, D51WHL33, D51DEL},
+            D51STR8, D51STR9, D51STRA, D51WHL31, D51WHL32, D51WHL33, D51DEL},
            {D51STR1, D51STR2, D51STR3, D51STR4, D51STR5, D51STR6, D51STR7,
-            D51WHL41, D51WHL42, D51WHL43, D51DEL},
+            D51STR8, D51STR9, D51STRA, D51WHL41, D51WHL42, D51WHL43, D51DEL},
            {D51STR1, D51STR2, D51STR3, D51STR4, D51STR5, D51STR6, D51STR7,
-            D51WHL51, D51WHL52, D51WHL53, D51DEL},
+            D51STR8, D51STR9, D51STRA, D51WHL51, D51WHL52, D51WHL53, D51DEL},
            {D51STR1, D51STR2, D51STR3, D51STR4, D51STR5, D51STR6, D51STR7,
-            D51WHL61, D51WHL62, D51WHL63, D51DEL}};
+            D51STR8, D51STR9, D51STRA, D51WHL61, D51WHL62, D51WHL63, D51DEL}};
+    // Edit this to add in extra coal levels.
     static char *coal[D51HIGHT + 1]
         = {COAL01, COAL02, COAL03, COAL04, COAL05,
-           COAL06, COAL07, COAL08, COAL09, COAL10, COALDEL};
+           COAL06, COAL07, COAL08, COAL09, COAL10, COAL11, COAL12,
+           COAL13, COALDEL};
 
     int y, i, dy = 0;
 
@@ -238,7 +241,7 @@ int add_C51(int x)
 
 void add_man(int y, int x)
 {
-    static char *man[2][2] = {{"", "(O)"}, {"Help!", "\\O/"}};
+    static char *man[2][2] = {{"", "(O)"}, {"1331", "\\O/"}};
     int i;
 
     for (i = 0; i < 2; ++i) {
