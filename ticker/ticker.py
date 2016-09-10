@@ -1,33 +1,48 @@
-import os
+import curses
 import time
-rows, columns = map(int, os.popen('stty size', 'r').read().split())
-data = [[" " for i in range(columns)] for i in range(rows)]
-clearString = "\n" * (columns + 1)
+import sys
+test ="""
+  _____      _      ____       ___    _   _     ____    _   _   _____  __   __    
+ |_   _|    / \    / ___|     / _ \  | \ | |   |  _ \  | | | | |_   _| \ \ / /  _ 
+   | |     / _ \   \___ \    | | | | |  \| |   | | | | | | | |   | |    \ V /  (_)
+   | |    / ___ \   ___) |   | |_| | | |\  |   | |_| | | |_| |   | |     | |    _ 
+   |_|   /_/   \_\ |____/     \___/  |_| \_|   |____/   \___/    |_|     |_|   (_)
 
-def disp(data):
-    print("\n".join(["".join(row) for row in data]))
+"""
 
-def clear():
-    os.system("clear")
-    print("\n")
+def tick(screen, string, starty = 0, rate = 0.016):
+    curses.curs_set(0)
+    maxy, maxx = screen.getmaxyx()
+    
+    def wrapLine(line, y, x):
+        lim = min(len(line), maxx - x)
+        screen.addstr(y, max(x, 0), line[abs(min(x, 0)):lim] + " ") 
 
-def write(y, x, word, data):
-    for i, l in enumerate(word):
-        data[y][x + i] = l
+    data = string.split("\n")
+    if len(data) > maxy:
+        raise Exception("Too many rows in the data and not enough screen space!")
+    maxline = max([len(line) for line in data])
 
-def shiftRight(data):
-    for r, row in enumerate(data):
-        for c, l in enumerate(row[1:] + [row[0]]):
-            data[r][c] = l
-
-def tick(data, rate):
+    x = maxx - 1
+    y = starty
     while True:
-        disp(data)
-        shiftRight(data)
-        time.sleep(rate)
-        clear()
+        for i, line in enumerate(data):
+            wrapLine(line, y + i, x)
 
-write(5, 30, "CS 1331 is the best!", data)
-clear()
-tick(data, 0.5)
+        if x < -maxline:
+            x = maxx
+
+        x -= 1
+
+        screen.refresh()
+        time.sleep(rate)
+
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        curses.wrapper(tick, test)
+    else:
+        string = ""
+        with open(sys.argv[1], 'r') as f:
+            string = f.read()
+        curses.wrapper(tick, string)
 
