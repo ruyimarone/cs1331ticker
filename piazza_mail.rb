@@ -1,4 +1,11 @@
+#!/usr/bin/env ruby
 require 'mail'
+
+
+# time in seconds between pop3 email checks
+SLEEP_TIME = 60
+MESSAGE_FILE_FMT="%H%M%S_%m%d.piazza.txt"
+
 
 class PiazzaStrings
   def initialize()
@@ -58,13 +65,13 @@ if __FILE__ == $0
       posts = piazza_strings.get_mails
       unless posts.empty?
         puts
-        filename = Time.now.strftime("%H%M%S_%m%d.piazza.txt")
+        filename = Time.now.strftime(MESSAGE_FILE_FMT)
         puts "Writing #{posts.length} post(s) to #{filename}"
         File.open(filename, 'w') do |file|
           file << posts.join("\n\n\n")
         end
       end
-      sleep 5
+      sleep SLEEP_TIME
     end
   end.join
 end
