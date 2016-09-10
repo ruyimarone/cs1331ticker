@@ -10,7 +10,7 @@ test ="""
 
 """
 
-def tick(screen, string, starty = 0, rate = 0.016):
+def tick(screen, string, starty = 0, rate = 0.016, times = 0):
     curses.curs_set(0)
     maxy, maxx = screen.getmaxyx()
     
@@ -25,11 +25,14 @@ def tick(screen, string, starty = 0, rate = 0.016):
 
     x = maxx - 1
     y = starty
-    while True:
+    t = 0
+    while times == 0 or t < times:
         for i, line in enumerate(data):
             wrapLine(line, y + i, x)
 
         if x < -maxline:
+            if times != 0:
+                t += 1
             x = maxx
 
         x -= 1
@@ -37,12 +40,17 @@ def tick(screen, string, starty = 0, rate = 0.016):
         screen.refresh()
         time.sleep(rate)
 
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        curses.wrapper(tick, test)
-    else:
+        curses.wrapper(tick, test, 0, 0.016, 3)
+    else: 
         string = ""
-        with open(sys.argv[1], 'r') as f:
+        with open(sys.argv[-1], 'r') as f:
             string = f.read()
-        curses.wrapper(tick, string)
-
+        if len(sys.argv) == 3:
+            times = sys.argv[1]
+            curses.wrapper(tick, string, times = int(times))
+        else:
+            curses.wrapper(tick, string)
+        
