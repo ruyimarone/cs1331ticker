@@ -11,49 +11,60 @@ class PiazzaStrings
     end
   end
 
-  def get()
+  ## !!!!Note: Gmail pop3 settings affect what the script pulls down!!!!
+  ## Also, the pop3 all mail setting seems not to stick (only affects first pull)
+  ## So keep that in mind when debugging and getting no mail
+  def get_mails()
     emails = Mail.find(:what => :first, :count => 20, :order => :asc)
-    puts "length: #{emails.length}"
-    emails.each {|mail| p mail.subject}
-    emails.select! do |mail| 
+    relevant = filter_mails emails
+    parse_mails relevant
+  end
+
+  private
+  def filter_mails(emails)
+    emails.select do |mail|
       mail.header['from'].value =~ /1331/ \
         and mail.from.any? {|s| s =~ /piazza\.com$/}
     end
+  end
 
+  def parse_mails(emails)
     if emails.empty?
-      puts "no new mail"
-    else 
-      puts "downloaded #{emails.length} email(s)"
-      File.open('emails.log', 'a') do |logfile|
-        emails.map do |mail|
-          # pulls out the post between the piazza boilerplate
-          match = mail.body.decoded.match(/^.*?posted.*?\n{2}(.*?)\n{2}Go to http/m)
-          logfile.puts "Subject: " + mail.subject
-          logfile.puts mail.body.decoded
-          unless match.nil?
-            result = match[1]
-            result = result.unpack "M" # somehow this fixes q-encoding artifacts
-            logfile.puts "\n~~~~~~~~parsed~~~~~~~~"
-            logfile.puts result
-            logfile.puts "~~~~~~~~~~end~~~~~~~~~~"
-            result
-          else
-            nil
-          end
+      print "."
+      return []
+    else
+      print "#{emails.length}"
+      return emails.map do |mail|
+        # pull out the post between the piazza boilerplate
+        match = mail.body.decoded
+          .match(/^.*?posted.*?\n{2}(.*?)\n{2}Go to http/m)
+        unless match.nil?
+          match[1].unpack "M" # this fixes q-encoding artifacts
+        else
+          nil
         end
       end
     end
   end
 end
 
+Thread::abort_on_exception = true
 
 if __FILE__ == $0
-  Thread::abort_on_exception = true
   piazza_strings = PiazzaStrings.new
+
   Thread.new do
     while true
-      piazza_strings.get
-      sleep 6
+      posts = piazza_strings.get_mails
+      unless posts.empty?
+        puts
+        filename = Time.now.strftime("%H%M%S_%m%d.piazza.txt")
+        puts "Writing #{posts.length} post(s) to #{filename}"
+        File.open(filename, 'w') do |file|
+          file << posts.join("\n\n\n")
+        end
+      end
+      sleep 5
     end
   end.join
 end
