@@ -42,15 +42,31 @@ def tick(screen, string, starty = 0, rate = 0.016, times = 0):
 
 
 if __name__ == "__main__":
+    #no file, debug mode
     if len(sys.argv) == 1:
         curses.wrapper(tick, test, 0, 0.016, 3)
     else: 
-        string = ""
-        with open(sys.argv[-1], 'r') as f:
-            string = f.read()
+        def getFile(name):
+            string = ""
+            with open(name, 'r') as f:
+                string = f.read()
+            return string
+
+        string = getFile(sys.argv[-1])
+
+        #full args, times and file
         if len(sys.argv) == 3:
-            times = sys.argv[1]
-            curses.wrapper(tick, string, times = int(times))
+            times = int(sys.argv[1])
+            if times == -1:
+                #update from file each time
+                name = sys.argv[-1]
+                while True:
+                    string = getFile(name) 
+                    curses.wrapper(tick, string, times = 1)
+            else:
+                #file and positive times
+                curses.wrapper(tick, string, times = int(times))
         else:
+            #just the file, run forever
             curses.wrapper(tick, string)
         
