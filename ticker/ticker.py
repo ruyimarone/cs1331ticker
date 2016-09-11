@@ -12,7 +12,7 @@ test = """
 
 """
 
-def tick(screen, string, starty = 0, rate = 0.016, times = 0):
+def tick(screen, string, starty = -1, rate = 0.016, times = 0):
     curses.curs_set(0)
     maxy, maxx = screen.getmaxyx()
     
@@ -21,12 +21,18 @@ def tick(screen, string, starty = 0, rate = 0.016, times = 0):
         screen.addstr(y, max(x, 0), line[abs(min(x, 0)):lim] + " ") 
 
     data = string.split("\n")
-    if len(data) > maxy:
-        raise Exception("Too many rows in the data and not enough screen space!")
     maxline = max([len(line) for line in data])
+    height = len(data)
+    if height > maxy:
+        raise Exception("Too many rows in the data and not enough screen space!")
 
     x = maxx - 1
-    y = starty
+    #center output on screen if starty is -1 (default flag value)
+    if starty == -1:
+        y = (maxy - height) / 2
+    else:
+        y = starty
+
     t = 0
     while times == 0 or t < times:
         for i, line in enumerate(data):
@@ -64,9 +70,14 @@ if __name__ == "__main__":
                 if os.path.isdir(name):
                     while True:
                         _, _, filenames = os.walk(name).next()
-                        for filename in filenames:
-                            curses.wrapper(tick, getFile(name + "/" + filename), times = 1)
-
+                        #if there are files here, tick through them, otherwise check again in one second
+                        if len(filenames) > 0:
+                            for filename in [n for n in filenames if n.endswith('txt')]:
+                                #extra check in case a file is removed while the walk is still happening
+                                if os.path.isfile(name + "/" + filename):
+                                    curses.wrapper(tick, getFile(name + "/" + filename), times = 1)
+                        else:
+                            time.sleep(1)
 
                 #update single file mode
                 else:
