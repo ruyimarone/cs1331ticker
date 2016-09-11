@@ -1,7 +1,9 @@
 import curses
 import time
 import sys
-test ="""
+import os
+
+test = """
   _____      _      ____       ___    _   _     ____    _   _   _____  __   __    
  |_   _|    / \    / ___|     / _ \  | \ | |   |  _ \  | | | | |_   _| \ \ / /  _ 
    | |     / _ \   \___ \    | | | | |  \| |   | | | | | | | |   | |    \ V /  (_)
@@ -52,21 +54,30 @@ if __name__ == "__main__":
                 string = f.read()
             return string
 
-        string = getFile(sys.argv[-1])
 
-        #full args, times and file
+        #user supplied full args, file and times to tick
         if len(sys.argv) == 3:
             times = int(sys.argv[1])
             if times == -1:
-                #update from file each time
                 name = sys.argv[-1]
-                while True:
-                    string = getFile(name) 
-                    curses.wrapper(tick, string, times = 1)
+                #update from dir mode
+                if os.path.isdir(name):
+                    while True:
+                        _, _, filenames = os.walk(name).next()
+                        for filename in filenames:
+                            curses.wrapper(tick, getFile(name + "/" + filename), times = 1)
+
+
+                #update single file mode
+                else:
+                    while True:
+                        curses.wrapper(tick, getFile(name), times = 1)
+
             else:
-                #file and positive times
-                curses.wrapper(tick, string, times = int(times))
+                #read from file and tick for given times                
+                curses.wrapper(tick, getFile(sys.argv[-1]), times = int(times))
         else:
-            #just the file, run forever
-            curses.wrapper(tick, string)
+            #read from file and tick for forever
+            curses.wrapper(tick, getFile(sys.argv[-1]))
+
         
