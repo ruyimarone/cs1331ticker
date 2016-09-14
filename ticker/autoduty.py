@@ -13,6 +13,10 @@ with open('officeHours.csv') as csvfile:
             if int(row[0].split(":")[1]) <= now.minute:
                 if 0 <= now.weekday() <= 4:
                     onduty = row[now.weekday() + 1]
-
-os.system('./makeduty.sh ' + onduty)
+if len(onduty) == 0:
+    os.system('./write.sh onduty.txt ' + '"No TAs On Duty!"')
+elif onduty == "Lecture":
+    os.system('./write.sh onduty.txt ' + '"Lecture in progress"')
+else:
+    os.system('./write.sh onduty.txt ' + '"TAs On Duty: ' + onduty + '"')
 

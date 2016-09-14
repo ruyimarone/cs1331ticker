@@ -1,2 +1,1 @@
-figlet -w 999 -W TAs ON DUTY : $* > sources/onduty.txt
-
+figlet -f doh -w 999 -W TAs ON DUTY : $* > sources/onduty.txt
