@@ -54,6 +54,8 @@ int LOGO      = 0;
 int FLY       = 0;
 int C51       = 0;
 int INTR      = 0;
+int CARFILE   = 0;
+const char* carFile = "carFile.sl";
 
 int my_mvaddstr(int y, int x, char *str)
 {
@@ -72,6 +74,7 @@ void option(char *str)
         switch (*str++) {
             case 'a': ACCIDENT = 1; break;
             case 'e': INTR     = 1; break;
+            case 'f': CARFILE  = 1; break;
             // case 'F': FLY      = 1; break; // No flying
             // case 'l': LOGO     = 1; break; // No LOGO
             // case 'c': C51      = 1; break; // No tiny train
