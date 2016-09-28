@@ -1,4 +1,6 @@
 #Ticker
+This is the project repository for the 1331 TA lab and help desk new ticker. It smoothly scrolls any pattern of text across a terminal window. We use it to automatically display the on duty TAs as well as making announcements. 
+##Usage
 This is a general purpose script that will cause a given block of text to scroll smoothly across the terminal, if possible.
 
 Running:
