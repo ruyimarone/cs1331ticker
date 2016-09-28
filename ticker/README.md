@@ -1,5 +1,8 @@
 #Ticker
 This is the project repository for the 1331 TA lab and help desk new ticker. It smoothly scrolls any pattern of text across a terminal window. We use it to automatically display the on duty TAs as well as making announcements. 
+
+<a href="http://marcmarone.com/taing.html" target="_blank"><img src="http://marcmarone.com/images/ticker.png" 
+alt="ticker" width="600" height="320" border="10" /></a>
 ##Usage
 This is a general purpose script that will cause a given block of text to scroll smoothly across the terminal, if possible.
 
